@@ -1,5 +1,5 @@
 # dgpio
-dpio is a tiny GPIO control library for single board computers in D language.
+dgpio is a tiny GPIO control library for single board computers in D language.
 # Install
 ### If dub is installed
 ```shell
