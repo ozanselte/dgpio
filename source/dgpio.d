@@ -79,7 +79,6 @@ class GPIO{
 	void setHigh(){
 		scope(failure){
 			err = true;
-			return;
 		}
 		File pValue = File("/sys/class/gpio/gpio" ~ to!string(gpio) ~ "/value", "w");
 		pValue.writefln("1");
@@ -89,7 +88,6 @@ class GPIO{
 	void setLow(){
 		scope(failure){
 			err = true;
-			return;
 		}
 		File pValue = File("/sys/class/gpio/gpio" ~ to!string(gpio) ~ "/value", "w");
 		pValue.writefln("0");
