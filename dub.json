@@ -1,0 +1,7 @@
+{
+	"name": "dgpio",
+	"description": "Tiny GPIO control library for single board computers",
+	"authors": ["Ozan Şelte"],
+	"license": "GPL-3.0",
+	"targeType": "library",
+}
