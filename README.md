@@ -1,5 +1,5 @@
 # dgpio
-dgpio is a tiny GPIO control library for single board computers in D language.
+dgpio is a tiny GPIO control library for all linux single board computers in D language.
 # Install
 ### If dub is installed
 ```shell
@@ -36,7 +36,7 @@ bool gpioLow = gpio.isLow();
 assert(gpio.isHigh() != gpio.isLow());
 ```
 
-### Write value to GPIO pin
+### Write digital value
 ```d
 gpio.setOutput();
 gpio.setHigh();
@@ -47,17 +47,9 @@ assert(gpio.isHigh() == false);
 
 ### Check GPIO pin
 ```d
-isInput = gpio.isInput();
-isOutput = gpio.isOutput();
-```
-
-
-###  Error control
-```d
-GPIO gpio2 = new GPIO(99);
-gpio.setOutput();
-//if there isn't GPIO-99
-assert(gpio2.error == true);
+ubyte gpioPin = gpio.gpio;
+bool isInput = gpio.isInput();
+bool isOutput = gpio.isOutput();
 ```
 
 ### Close GPIO pin

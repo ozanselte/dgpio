@@ -3,56 +3,49 @@ module dgpio;
 import std.stdio : File;
 import std.conv : to;
 import std.string : strip;
+import std.file : exists;
 
 class GPIO{
 	immutable ubyte gpio;
-	bool err = false;
+	private enum string exportFile = "/sys/class/gpio/export";
+	private enum string unexportFile = "/sys/class/gpio/unexport";
+	private immutable string pinFolder;
+	private immutable string directionFile;
+	private immutable string valueFile;
+
+	private void writeLine(string file, string str){
+		File f = File(file, "w");
+		f.writeln(str);
+	}
+
+	private string readLine(string file){
+		File f = File(file, "r");
+		string line = strip(f.readln());
+		return(line);
+	}
 
 	private void activate(){
-		try{
-			File pExport = File("/sys/class/gpio/export", "w");
-			pExport.writefln("%s", gpio);
-			pExport.close();
-		}catch(Exception e){
-			err = true;
+		if(!exists(pinFolder)){
+			writeLine(exportFile, to!string(gpio));
 		}
 	}
 
 	void deactivate(){
-		try{
-			File pUnexport = File("/sys/class/gpio/unexport", "w");
-			pUnexport.writefln("%s", gpio);
-			pUnexport.close();
-		}catch(Exception e){
-			err = true;
+		if(exists(pinFolder)){
+			writeLine(exportFile, to!string(gpio));
 		}
 	}
 
 	void setInput(){
-		scope(failure){
-			err = true;
-		}
-		File pDirection = File("/sys/class/gpio/gpio" ~ to!string(gpio) ~ "/direction", "w");
-		pDirection.writefln("in");
-		pDirection.close();
+		writeLine(directionFile, "in");
 	}
 
 	void setOutput(){
-		scope(failure){
-			err = true;
-		}
-		File pDirection = File("/sys/class/gpio/gpio" ~ to!string(gpio) ~ "/direction", "w");
-		pDirection.writefln("out");
-		pDirection.close();
+		writeLine(directionFile, "out");
 	}
 
 	bool isInput(){
-		scope(failure){
-			err = true;
-		}
-		File pDirection = File("/sys/class/gpio/gpio" ~ to!string(gpio) ~ "/direction", "r");
-		string str = strip(pDirection.readln());
-		pDirection.close();
+		string str = readLine(directionFile);
 		switch(str){
 			case "in":
 				return(true);
@@ -62,12 +55,7 @@ class GPIO{
 	}
 
 	bool isOutput(){
-		scope(failure){
-			err = true;
-		}
-		File pDirection = File("/sys/class/gpio/gpio" ~ to!string(gpio) ~ "/direction", "r");
-		string str = strip(pDirection.readln());
-		pDirection.close();
+		string str = readLine(directionFile);
 		switch(str){
 			case "out":
 				return(true);
@@ -77,30 +65,15 @@ class GPIO{
 	}
 
 	void setHigh(){
-		scope(failure){
-			err = true;
-		}
-		File pValue = File("/sys/class/gpio/gpio" ~ to!string(gpio) ~ "/value", "w");
-		pValue.writefln("1");
-		pValue.close();
+		writeLine(valueFile, "1");
 	}
 
 	void setLow(){
-		scope(failure){
-			err = true;
-		}
-		File pValue = File("/sys/class/gpio/gpio" ~ to!string(gpio) ~ "/value", "w");
-		pValue.writefln("0");
-		pValue.close();
+		writeLine(valueFile, "0");
 	}
 
 	bool isHigh(){
-		scope(failure){
-			err = true;
-		}
-		File pValue = File("/sys/class/gpio/gpio" ~ to!string(gpio) ~ "/value", "r");
-		string str = strip(pValue.readln());
-		pValue.close();
+		string str = readLine(valueFile);
 		switch(str){
 			case "0":
 				return(false);
@@ -110,12 +83,7 @@ class GPIO{
 	}
 
 	bool isLow(){
-		scope(failure){
-			err = true;
-		}
-		File pValue = File("/sys/class/gpio/gpio" ~ to!string(gpio) ~ "/value", "r");
-		string str = strip(pValue.readln());
-		pValue.close();
+		string str = readLine(valueFile);
 		switch(str){
 			case "0":
 				return(true);
@@ -124,17 +92,10 @@ class GPIO{
 		}
 	}
 
-	void deleteError(){
-		scope(failure){
-			err = true;
-		}
-		err = false;
-	}
-
 	this(ubyte gpio){
-		scope(failure){
-			err = true;
-		}
+		pinFolder = "/sys/class/gpio/" ~ to!string(gpio);
+		directionFile = pinFolder ~ "/direction";
+		valueFile = pinFolder ~ "/value";
 		this.gpio = gpio;
 		activate();
 	}
