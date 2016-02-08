@@ -93,7 +93,7 @@ class GPIO{
 	}
 
 	this(ubyte gpio){
-		pinFolder = "/sys/class/gpio/" ~ to!string(gpio);
+		pinFolder = "/sys/class/gpio/gpio" ~ to!string(gpio);
 		directionFile = pinFolder ~ "/direction";
 		valueFile = pinFolder ~ "/value";
 		this.gpio = gpio;
