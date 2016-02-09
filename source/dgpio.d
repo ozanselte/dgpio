@@ -32,7 +32,7 @@ class GPIO{
 
 	void deactivate(){
 		if(exists(pinFolder)){
-			writeLine(exportFile, to!string(gpio));
+			writeLine(unexportFile, to!string(gpio));
 		}
 	}
 
