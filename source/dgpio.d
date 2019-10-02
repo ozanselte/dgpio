@@ -46,22 +46,12 @@ class GPIO{
 
 	bool isInput(){
 		string str = readLine(directionFile);
-		switch(str){
-			case "in":
-				return(true);
-			default:
-				return(false);
-		}
+		return("in" == str)
 	}
 
 	bool isOutput(){
 		string str = readLine(directionFile);
-		switch(str){
-			case "out":
-				return(true);
-			default:
-				return(false);
-		}
+		return("out" == str)
 	}
 
 	void setHigh(){
@@ -74,22 +64,12 @@ class GPIO{
 
 	bool isHigh(){
 		string str = readLine(valueFile);
-		switch(str){
-			case "0":
-				return(false);
-			default:
-				return(true);
-		}
+		return("0" != str)
 	}
 
 	bool isLow(){
 		string str = readLine(valueFile);
-		switch(str){
-			case "0":
-				return(true);
-			default:
-				return(false);
-		}
+		return("0" == str)
 	}
 
 	this(ubyte gpio){
